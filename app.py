@@ -32,6 +32,13 @@ def page_by_genre(genre):
     # return films
 
 
+@app.route('/<type_film>/<int:release_year>/<genre>')
+def page_by_type_release_year_genre(type_film, release_year, genre):
+    films = get_films_by_type_release_year_genre(type_film=type_film, release_year=release_year, genre=genre)
+    return render_template('by_genre.html', films=films)
+    # return films
+
+
 @app.errorhandler(404)
 def route_not_found(error):
     return f"Такой страницы нет {error}", 404
