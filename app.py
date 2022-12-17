@@ -1,6 +1,13 @@
-from flask import Flask
+from flask import Flask, render_template
+from utils import *
 
 app = Flask(__name__)
+
+
+@app.route('/movie/<title>')
+def route_not_found(title):
+    film_json = get_film_by_title(title)
+    return render_template('by_title.html', film=film_json)
 
 
 @app.errorhandler(404)
