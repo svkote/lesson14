@@ -5,9 +5,17 @@ app = Flask(__name__)
 
 
 @app.route('/movie/<title>')
-def route_not_found(title):
+def page_by_title(title):
     film_json = get_film_by_title(title)
     return render_template('by_title.html', film=film_json)
+    # return film_json
+
+
+@app.route('/movie/<int:start>/to/<int:finish>')
+def page_by_year(start, finish):
+    films = get_films_by_realese_year_range(start, finish)
+    return render_template('by_year.html', films=films)
+    # return films
 
 
 @app.errorhandler(404)

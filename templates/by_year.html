@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Информация по фильмам</title>
+</head>
+<body>
+{% for film in films %}
+    <h5>{{film.title}} - {{ film.release_year }}</h5>
+{% endfor %}
+</body>
+</html>
