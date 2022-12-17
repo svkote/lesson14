@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Информация по фильмам</title>
+</head>
+<body>
+{% for film in films %}
+    <h3>{{film.title}} - {{ film.rating }}</h3>
+    <p>{{ film.description }}</p>
+{% endfor %}
+</body>
+</html>

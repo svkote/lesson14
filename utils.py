@@ -38,4 +38,38 @@ def get_films_by_realese_year_range(start, finish):
     return films
 
 
-print(get_films_by_realese_year_range(1900, 2010))
+def get_films_by_rating(ratings):
+    """Возвращает список фильмов в указанных рейтингах"""
+    if ratings == 'family':
+        query = f'''SELECT title, rating, description
+        FROM netflix
+        WHERE rating IN ('G', 'PG', 'PG-13')
+        ORDER BY release_year DESC
+        LIMIT 100'''
+    elif ratings == 'children':
+        query = f'''SELECT title, rating, description
+        FROM netflix
+        WHERE rating='G'
+        ORDER BY release_year DESC
+        LIMIT 100'''
+    else:
+        query = f'''SELECT title, rating, description
+        FROM netflix
+        WHERE rating IN ('R', 'NC-17')
+        ORDER BY release_year DESC
+        LIMIT 100'''
+
+    with sqlite3.connect('netflix.db') as conn:
+        cursor = conn.cursor()
+        cursor.execute(query)
+        res = cursor.fetchall()
+
+    films = []
+    for row in res:
+        film = {"title": row[0], "rating": row[1], "description": row[2]}
+        films.append(film)
+
+    return films
+
+
+print(get_films_by_rating('chdren'))

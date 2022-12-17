@@ -18,6 +18,13 @@ def page_by_year(start, finish):
     # return films
 
 
+@app.route('/rating/<rating>')
+def page_by_rating(rating):
+    films = get_films_by_rating(rating)
+    return render_template('by_rating.html', films=films)
+    # return films
+
+
 @app.errorhandler(404)
 def route_not_found(error):
     return f"Такой страницы нет {error}", 404
