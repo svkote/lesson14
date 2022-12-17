@@ -25,6 +25,13 @@ def page_by_rating(rating):
     # return films
 
 
+@app.route('/genre/<genre>')
+def page_by_genre(genre):
+    films = get_films_by_genre(genre)
+    return render_template('by_genre.html', films=films)
+    # return films
+
+
 @app.errorhandler(404)
 def route_not_found(error):
     return f"Такой страницы нет {error}", 404

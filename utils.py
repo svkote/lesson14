@@ -72,4 +72,24 @@ def get_films_by_rating(ratings):
     return films
 
 
-print(get_films_by_rating('chdren'))
+def get_films_by_genre(genre):
+    """Возвращает список фильмов в указанном жанре"""
+    with sqlite3.connect('netflix.db') as conn:
+        cursor = conn.cursor()
+        query = f'''SELECT title, description
+        FROM netflix
+        WHERE listed_in LIKE '%{genre}%'
+        ORDER BY release_year DESC
+        LIMIT 10'''
+        cursor.execute(query)
+        res = cursor.fetchall()
+
+    films = []
+    for row in res:
+        film = {"title": row[0], "description": row[1]}
+        films.append(film)
+
+    return films
+
+
+print(get_films_by_genre('Dramas'))
