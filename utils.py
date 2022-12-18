@@ -21,8 +21,11 @@ def get_film_by_title(title):
     LIMIT 1'''
     res = sql_connect(query)
 
-    film = {"title": res[0], "country": res[1], "release_year": res[2], "genre": res[3], "description": res[4]}
-    return json.dumps(film)
+    films = []
+    for row in res:
+        film = {"title": row[0], "country": row[1], "release_year": row[2], "genre": row[3], "description": row[4]}
+        films.append(film)
+    return films
 
 
 def get_films_by_realese_year_range(start, finish):
