@@ -2,17 +2,24 @@ import json
 import sqlite3
 
 
-def get_film_by_title(title):
-    """Возвращает самый свежий фильм по названию"""
+def sql_connect(query):
+    """подключение к БД"""
     with sqlite3.connect('netflix.db') as conn:
         cursor = conn.cursor()
-        query = f'''SELECT title, country, release_year, listed_in, description
-        FROM netflix
-        WHERE title='{title}'
-        ORDER BY release_year DESC
-        LIMIT 1'''
         cursor.execute(query)
-        res = cursor.fetchone()
+        res = cursor.fetchall()
+    return res
+
+
+def get_film_by_title(title):
+    """Возвращает самый свежий фильм по названию"""
+
+    query = f'''SELECT title, country, release_year, listed_in, description
+    FROM netflix
+    WHERE title='{title}'
+    ORDER BY release_year DESC
+    LIMIT 1'''
+    res = sql_connect(query)
 
     film = {"title": res[0], "country": res[1], "release_year": res[2], "genre": res[3], "description": res[4]}
     return json.dumps(film)
@@ -20,15 +27,12 @@ def get_film_by_title(title):
 
 def get_films_by_realese_year_range(start, finish):
     """Возвращает список фильмов в указанном диапазоне дат выпуска"""
-    with sqlite3.connect('netflix.db') as conn:
-        cursor = conn.cursor()
-        query = f'''SELECT title, release_year
-        FROM netflix
-        WHERE release_year BETWEEN {start} AND {finish}
-        ORDER BY release_year DESC
-        LIMIT 100'''
-        cursor.execute(query)
-        res = cursor.fetchall()
+    query = f'''SELECT title, release_year
+    FROM netflix
+    WHERE release_year BETWEEN {start} AND {finish}
+    ORDER BY release_year DESC
+    LIMIT 100'''
+    res = sql_connect(query)
 
     films = []
     for row in res:
@@ -59,10 +63,7 @@ def get_films_by_rating(ratings):
         ORDER BY release_year DESC
         LIMIT 100'''
 
-    with sqlite3.connect('netflix.db') as conn:
-        cursor = conn.cursor()
-        cursor.execute(query)
-        res = cursor.fetchall()
+    res = sql_connect(query)
 
     films = []
     for row in res:
@@ -74,15 +75,12 @@ def get_films_by_rating(ratings):
 
 def get_films_by_genre(genre):
     """Возвращает список фильмов в указанном жанре"""
-    with sqlite3.connect('netflix.db') as conn:
-        cursor = conn.cursor()
-        query = f'''SELECT title, description
-        FROM netflix
-        WHERE listed_in LIKE '%{genre}%'
-        ORDER BY release_year DESC
-        LIMIT 10'''
-        cursor.execute(query)
-        res = cursor.fetchall()
+    query = f'''SELECT title, description
+    FROM netflix
+    WHERE listed_in LIKE '%{genre}%'
+    ORDER BY release_year DESC
+    LIMIT 10'''
+    res = sql_connect(query)
 
     films = []
     for row in res:
@@ -94,17 +92,14 @@ def get_films_by_genre(genre):
 
 def get_films_by_type_release_year_genre(type_film, release_year, genre):
     """Возвращает список фильмов в указанном жанре, годе выпуска и типа"""
-    with sqlite3.connect('netflix.db') as conn:
-        cursor = conn.cursor()
-        query = f'''SELECT title, description
-        FROM netflix
-        WHERE netflix.type='{type_film}' 
-        AND release_year={release_year}
-        AND listed_in LIKE '%{genre}%'
-        ORDER BY release_year DESC
-        LIMIT 100'''
-        cursor.execute(query)
-        res = cursor.fetchall()
+    query = f'''SELECT title, description
+    FROM netflix
+    WHERE netflix.type='{type_film}' 
+    AND release_year={release_year}
+    AND listed_in LIKE '%{genre}%'
+    ORDER BY release_year DESC
+    LIMIT 100'''
+    res = sql_connect(query)
 
     films = []
     for row in res:
@@ -114,4 +109,4 @@ def get_films_by_type_release_year_genre(type_film, release_year, genre):
     return films
 
 
-print(get_films_by_type_release_year_genre('TV Show', 2020, 'TV Comedies'))
+# print(get_films_by_type_release_year_genre('TV Show', 2020, 'TV Comedies'))
